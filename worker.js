@@ -116,79 +116,16 @@ function simulate() {
 
 }
 
-function addParticles() {
-
-	if ( mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height ) return;
-
-	let x = floor( ( mouseX / width ) * ( gridSize.x ) );
-	let y = floor( ( mouseY / height ) * ( gridSize.y ) );
-	let bR = map( brushSize, 0, 15, 0.6, 0.2 );
-
-	if ( mouseButton == LEFT ) {
-
-		for ( let y1 = - brushSize; y1 <= brushSize; y1 ++ ) {
-
-			for ( let x1 = - brushSize; x1 <= brushSize; x1 ++ ) {
-
-				if ( ( selectedType != 2 && Math.random() > bR ) ||
-          x1 * x1 + y1 * y1 > brushSize * brushSize ||
-          x + x1 >= gridSize.x || x + x1 < 0 ||
-          y + y1 >= gridSize.y || y + y1 < 0 ) {
-
-					continue;
-
-				}
-
-				let offset = ( ( ( y + y1 ) * gridSize.x ) + ( x + x1 ) );
-
-				if ( ! grid[ offset ] ) {
 
 
-					const newParticle = new particleTypes[ selectedType ].particle( {
-						offset: offset,
-						position: { x: x + x1, y: y + y1 }
-					} );
-
-					newParticle.display();
-					grid[ offset ] = newParticle;
-					particles.push( newParticle );
-
-				}
-
-			}
-
-		}
-
-	} else if ( mouseButton == RIGHT ) {
-
-		for ( let i = particles.length - 1; i >= 0; i -- ) {
-
-			let p = particles[ i ];
-			let dx = p.x - x, dy = p.y - y;
-			if ( dx * dx + dy * dy < brushSize * brushSize ) {
-
-				displayImage.pixels[ p.offset * 4 + 0 ] = 0;
-				displayImage.pixels[ p.offset * 4 + 1 ] = 0;
-				displayImage.pixels[ p.offset * 4 + 2 ] = 0;
-				grid[ p.offset ] = undefined;
-				particles.splice( i, 1 );
-
-			}
-
-		}
-
-	}
-
-}
-
-map = ( n, start1, stop1, start2, stop2 ) => {
+const map = ( n, start1, stop1, start2, stop2 ) => {
 
 	const newval = ( n - start1 ) / ( stop1 - start1 ) * ( stop2 - start2 ) + start2;
 	return newval;
 
 };
 
-random = ( min, max ) => {
+const random = ( min, max ) => {
 
 	let rand;
 
